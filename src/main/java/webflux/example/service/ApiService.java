@@ -102,6 +102,7 @@ public class ApiService {
                                 .doOnNext(orderDetail -> {
                                     // 알림 발송
                                     Notification notification = Notification.builder()
+                                            .userId(existingOrder.getUserId())
                                             .title("새 메시지")
                                             .message(orderDetail.getProductName() + " 상품이 출발하였습니다.")
                                             .createDtime(LocalDateTime.now())
