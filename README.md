@@ -12,7 +12,6 @@ WebFlux의 핵심 개념과 SSE(Server-Sent Events)를 활용한 실시간 알�
 - **Database**: PostgreSQL + R2DBC (Reactive Database Connectivity)
 - **Build Tool**: Gradle
 - **Java Version**: 8
-- **Documentation**: SpringDoc OpenAPI (Swagger UI)
 
 ## 프로젝트 구조
 
@@ -154,11 +153,6 @@ curl -N http://localhost:8080/sse/1
 - **Sinks**: 다중 구독자 관리
 - **Event Stream**: 이벤트 기반 알림 시스템
 
-## Swagger UI
-
-프로젝트 실행 후 다음 URL에서 API 문서를 확인할 수 있습니다:
-- **Swagger UI**: http://localhost:8080/swagger-ui.html
-- **OpenAPI Docs**: http://localhost:8080/api-docs
 
 ## 추가 학습 자료
 
