@@ -1,0 +1,36 @@
+2025-07-14 17:05:57 [main] INFO  w.e.WebfluxAplicationApplication - Starting WebfluxAplicationApplication using Java 1.8.0_202 on LAPTOP-TPK7K84R with PID 32740 (C:\Users\anstd\IdeaProjects\webflux_example\build\classes\java\main started by anstd in C:\Users\anstd\IdeaProjects\webflux_example)
+2025-07-14 17:05:57 [main] INFO  w.e.WebfluxAplicationApplication - No active profile set, falling back to 1 default profile: "default"
+2025-07-14 17:05:58 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data R2DBC repositories in DEFAULT mode.
+2025-07-14 17:05:58 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 124 ms. Found 3 R2DBC repository interfaces.
+2025-07-14 17:05:59 [main] TRACE o.s.w.r.r.m.a.RequestMappingHandlerMapping - 
+	o.s.w.a.OpenApiWebfluxResource:
+	{GET /api-docs.yaml, produces [application/vnd.oai.openapi]}: openapiYaml(ServerHttpRequest,String,Locale)
+	{GET /api-docs, produces [application/json]}: openapiJson(ServerHttpRequest,String,Locale)
+2025-07-14 17:05:59 [main] TRACE o.s.w.r.r.m.a.RequestMappingHandlerMapping - 
+	o.s.w.u.SwaggerWelcomeWebFlux:
+	{GET /swagger-ui.html}: redirectToUi(ServerHttpRequest,ServerHttpResponse)
+2025-07-14 17:05:59 [main] TRACE o.s.w.r.r.m.a.RequestMappingHandlerMapping - 
+	o.s.w.u.SwaggerConfigResource:
+	{GET /api-docs/swagger-config, produces [application/json]}: getSwaggerUiConfig(ServerHttpRequest)
+2025-07-14 17:05:59 [main] DEBUG o.s.w.r.r.m.a.RequestMappingHandlerMapping - 4 mappings in 'requestMappingHandlerMapping'
+2025-07-14 17:05:59 [main] TRACE o.s.w.r.f.s.s.RouterFunctionMapping - Mapped ((POST && /api/user) && Content-Type: application/json) -> webflux.example.config.RouterConfig$$Lambda$796/680306160@169268a7
+(GET && /api/users) -> webflux.example.config.RouterConfig$$Lambda$797/231182885@285c6918
+(GET && /api/user/{userId}) -> webflux.example.config.RouterConfig$$Lambda$798/1361609751@78a0ff63
+((PUT && /api/user/{userId}) && Content-Type: application/json) -> webflux.example.config.RouterConfig$$Lambda$799/1624203949@7c601d50
+(DELETE && /api/user/{userId}) -> webflux.example.config.RouterConfig$$Lambda$800/503879157@79b2852b
+((POST && /api/order) && Content-Type: application/json) -> webflux.example.config.RouterConfig$$Lambda$801/449105069@326d27ac
+2025-07-14 17:05:59 [main] TRACE o.s.w.r.f.s.s.RouterFunctionMapping - Mapped org.springframework.web.reactive.function.server.RequestPredicates$$Lambda$802/843005078@4d499d65 -> webflux.example.config.RouterConfig$$Lambda$803/1730595945@313f8301
+2025-07-14 17:05:59 [main] TRACE o.s.w.r.h.SimpleUrlHandlerMapping - Mapped [/webjars/**] onto ResourceWebHandler [classpath [META-INF/resources/webjars/]]
+2025-07-14 17:05:59 [main] TRACE o.s.w.r.h.SimpleUrlHandlerMapping - Mapped [/**] onto ResourceWebHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/]]
+2025-07-14 17:05:59 [main] DEBUG o.s.w.r.h.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-07-14 17:05:59 [main] DEBUG o.s.w.r.r.m.a.ControllerMethodResolver - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 @ExceptionHandler
+2025-07-14 17:06:01 [main] INFO  o.s.b.w.e.netty.NettyWebServer - Netty started on port 8080
+2025-07-14 17:06:01 [main] INFO  w.e.WebfluxAplicationApplication - Started WebfluxAplicationApplication in 4.231 seconds (JVM running for 4.61)
+2025-07-14 17:06:37 [reactor-http-nio-2] TRACE o.s.w.r.f.server.RequestPredicates - Method "[POST]" does not match against value "DELETE"
+2025-07-14 17:06:37 [reactor-http-nio-2] TRACE o.s.w.r.f.server.RequestPredicates - Method "[GET]" does not match against value "DELETE"
+2025-07-14 17:06:37 [reactor-http-nio-2] TRACE o.s.w.r.f.server.RequestPredicates - Method "[GET]" does not match against value "DELETE"
+2025-07-14 17:06:37 [reactor-http-nio-2] TRACE o.s.w.r.f.server.RequestPredicates - Method "[PUT]" does not match against value "DELETE"
+2025-07-14 17:06:37 [reactor-http-nio-2] TRACE o.s.w.r.f.server.RequestPredicates - Method "[DELETE]" matches against value "DELETE"
+2025-07-14 17:06:37 [reactor-http-nio-2] TRACE o.s.w.r.f.server.RequestPredicates - Pattern "/api/user/{userId}" matches against value "/api/user/7"
+2025-07-14 17:06:37 [reactor-http-nio-2] TRACE o.s.w.r.f.server.RouterFunctions - [053e3a1a-1] Matched (DELETE && /api/user/{userId})
+2025-07-14 17:06:37 [reactor-http-nio-2] DEBUG o.s.w.r.f.s.s.RouterFunctionMapping - [053e3a1a-1] Mapped to webflux.example.config.RouterConfig$$Lambda$800/503879157@79b2852b

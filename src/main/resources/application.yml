@@ -1,0 +1,44 @@
+# -------------------- 서버 설정 부분 --------------------
+server:
+  port: 8080                    # 내장 WAS(Netty)가 사용할 포트 번호입니다.
+  title: webflux-example        # (선택 사항) 애플리케이션 제목. 로그 출력시 등 식별 용도로 사용됩니다.
+  version: 1.0.0                # (선택 사항) 애플리케이션 버전. 운영시 활용됩니다.
+  shutdown: graceful            # 종료 신호 받을 때, 진행 중인 요청을 완료한 후에 종료됩니다. (반대: immediate)
+
+# -------------------- Spring 프레임워크 핵심 설정 --------------------
+spring:
+  main:
+    web-application-type: reactive  # 리액티브 웹 애플리케이션(WebFlux) 모드로 실행됩니다. (반대: servlet)
+  lifecycle:
+    timeout-per-shutdown-phase: 20s # Graceful Shutdown 시, 각 단계별 최대 대기 시간입니다. (20초 이후 강제 종료)
+
+  # --- 리액티브 DB 연동(R2DBC) 설정 ---
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/webflux_example # R2DBC용 데이터베이스 연결 URL (데이터베이스: postgresql, DB명: webflux_example)
+    username: root                  # 데이터베이스 접속 계정 이름
+    password: dlab9185              # 데이터베이스 접속 계정 비밀번호
+
+# -------------------- 로깅 설정 --------------------
+logging:
+  level:
+    root: INFO                      # 전체 로그 레벨
+    webflux.example: DEBUG          # 프로젝트 패키지 로그 레벨
+    org.springframework.web.reactive: DEBUG # Spring WebFlux 로그 레벨
+    org.springframework.r2dbc: DEBUG # R2DBC 로그 레벨
+    reactor.netty: INFO             # Netty 로그 레벨
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/webflux-example.log  # 로그 파일 경로
+    max-size: 10MB                  # 로그 파일 최대 크기
+    max-history: 30                 # 로그 파일 보관 기간 (일)
+
+# -------------------- API 문서 자동생성(SpringDoc) 관련 설정 --------------------
+springdoc:
+  api-docs:
+    path: /api-docs               # OpenAPI 3.0 규격서(JSON)를 조회할 엔드포인트입니다.
+  swagger-ui:
+    path: /swagger-ui.html        # Swagger UI 화면에 접근할 수 있는 URL 경로입니다.
+    operations-sorter: method     # 각 API 태그 내부에서 개별API(오퍼레이션)을 HTTP Method 순서로 정렬합니다. (DELETE, GET, POST...)
+    tags-sorter: alpha            # API 태그(그룹) 목록을 알파벳(A-Z) 순서로 정렬합니다.
