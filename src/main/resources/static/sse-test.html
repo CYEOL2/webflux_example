@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE 테스트</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* 수정된 control-panel - 정렬 개선 */
+        .control-panel {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: end; /* 하단 정렬로 버튼과 입력 필드 맞춤 */
+            justify-content: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 0.9em;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            width: 120px;
+            height: 48px; /* 버튼과 같은 높이로 설정 */
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            height: 48px; /* 명시적 높이 설정으로 입력 필드와 동일하게 */
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e1e5e9;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 수정된 status - 여백 최소화 */
+        .status {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 20px;
+        }
+
+        .status.connected {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.connecting {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .messages {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .message:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .message-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .message-time {
+            font-size: 0.85em;
+            color: #999;
+            margin-left: auto;
+        }
+
+        .message-content {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+            padding: 40px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .messages::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+
+        .messages::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SSE 테스트</h1>
+            <p>실시간 알림 스트림 테스트</p>
+        </div>
+
+        <div class="control-panel">
+            <div class="input-group">
+                <label for="userIdInput">사용자 ID</label>
+                <input type="number" id="userIdInput" placeholder="1" value="1">
+            </div>
+            <button class="btn btn-primary" id="connectBtn">연결</button>
+            <button class="btn btn-secondary" id="disconnectBtn" disabled>연결 해제</button>
+        </div>
+
+        <div class="status disconnected" id="status">
+            연결되지 않음
+        </div>
+
+        <div class="messages" id="messages">
+            <div class="empty-state">
+                SSE 메시지를 받으면 여기에 표시됩니다.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let eventSource = null;
+        let messageCount = 0;
+
+        const userIdInput = document.getElementById('userIdInput');
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const status = document.getElementById('status');
+        const messages = document.getElementById('messages');
+
+        function updateStatus(state, message) {
+            status.className = `status ${state}`;
+            if (message.includes('\n')) {
+                status.innerHTML = message.replace('\n', '<br>');
+            } else {
+                status.textContent = message;
+            }
+        }
+
+        function addMessage(notification) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ko-KR');
+            
+            messageDiv.innerHTML = `
+                <div class="message-header">
+                    <div class="message-title">${notification.title || '알림'}</div>
+                    <div class="message-time">${timeString}</div>
+                </div>
+                <div class="message-content">${notification.message}</div>
+            `;
+
+            if (messages.children.length === 1 && messages.children[0].classList.contains('empty-state')) {
+                messages.innerHTML = '';
+            }
+
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+            messageCount++;
+        }
+
+        function connect() {
+            const userId = userIdInput.value;
+            if (!userId) {
+                alert('사용자 ID를 입력해주세요.');
+                return;
+            }
+
+            if (eventSource) {
+                eventSource.close();
+            }
+
+            updateStatus('connecting', '연결 중..\n첫 번째 메시지가 들어오면 open 됩니다.');
+            connectBtn.disabled = true;
+            disconnectBtn.disabled = false;
+            userIdInput.disabled = true;
+
+            console.log(`SSE 연결 시도: /sse/${userId}`);
+            eventSource = new EventSource(`/sse/${userId}`, {
+                withCredentials: false
+            });
+
+            eventSource.addEventListener('open', function(event) {
+                console.log('✅ SSE 연결 성공 (open 이벤트 발생)!');
+                updateStatus('connected', `사용자 ${userId}로 연결됨`);
+                disconnectBtn.disabled = false;
+            });
+
+            eventSource.addEventListener('alert-message', function(event) {
+                console.log('메시지 수신:', event.data);
+                // 첫 번째 메시지를 받으면 확실히 연결된 것으로 처리
+                if (status.classList.contains('connecting')) {
+                    updateStatus('connected', `사용자 ${userId}로 연결됨`);
+                    disconnectBtn.disabled = false;
+                }
+                try {
+                    const notification = JSON.parse(event.data);
+                    addMessage(notification);
+                } catch (e) {
+                    console.error('메시지 파싱 오류:', e);
+                    addMessage({
+                        title: '파싱 오류',
+                        message: event.data
+                    });
+                }
+            });
+
+            eventSource.onerror = function(error) {
+                console.error('SSE 연결 오류:', error);
+                updateStatus('disconnected', '연결 오류 발생');
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+                userIdInput.disabled = false;
+                eventSource = null;
+            };
+        }
+
+        function disconnect() {
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+            }
+            updateStatus('disconnected', '연결 해제됨');
+            connectBtn.disabled = false;
+            disconnectBtn.disabled = true;
+            userIdInput.disabled = false;
+        }
+
+        connectBtn.addEventListener('click', connect);
+        disconnectBtn.addEventListener('click', disconnect);
+
+        userIdInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                connect();
+            }
+        });
+
+        window.addEventListener('beforeunload', function() {
+            if (eventSource) {
+                eventSource.close();
+            }
+        });
+    </script>
+</body>
+</html>
