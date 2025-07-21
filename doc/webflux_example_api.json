@@ -33,6 +33,44 @@
                 "version": "V11"
               },
               "host": "localhost:8080",
+              "path": "/sse/1"
+            },
+            "id": "dceb7267-1abe-4934-a3f1-e48fabf5ddfe",
+            "name": "SSE 커넥션 종료",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "connection",
+                "value": "close"
+              }
+            ]
+          }
+        },
+        {
+          "entity": {
+            "type": "Request",
+            "method": {
+              "link": "http://tools.ietf.org/html/rfc7231#section-4.3.5",
+              "name": "DELETE"
+            },
+            "body": {
+              "formBody": {
+                "overrideContentType": true,
+                "encoding": "application/x-www-form-urlencoded",
+                "items": []
+              },
+              "bodyType": "Text"
+            },
+            "uri": {
+              "query": {
+                "delimiter": "&",
+                "items": []
+              },
+              "scheme": {
+                "name": "http",
+                "version": "V11"
+              },
+              "host": "localhost:8080",
               "path": "/api/user/7"
             },
             "id": "9c249c3f-6786-44da-bdfa-7812a1c4b928",
@@ -215,8 +253,9 @@
           "entity": {
             "type": "Request",
             "method": {
-              "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
-              "name": "GET"
+              "requestBody": true,
+              "link": "http://tools.ietf.org/html/rfc5789",
+              "name": "PATCH"
             },
             "body": {
               "formBody": {
@@ -224,18 +263,30 @@
                 "encoding": "application/x-www-form-urlencoded",
                 "items": []
               },
-              "bodyType": "Text"
+              "bodyType": "Text",
+              "textBody": "{\n  \"orderStatus\" : \"SHIPPED\"\n}\n"
             },
             "uri": {
+              "query": {
+                "delimiter": "&",
+                "items": []
+              },
               "scheme": {
-                "secure": true,
-                "name": "https",
+                "name": "http",
                 "version": "V11"
-              }
+              },
+              "host": "localhost:8080",
+              "path": "/api/order/1"
             },
             "id": "98ad07c7-7785-4ed0-9171-532e4fd39b45",
             "name": "주문 상태 변경",
-            "headers": []
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
           }
         },
         {
