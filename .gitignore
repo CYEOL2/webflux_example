@@ -38,4 +38,4 @@ out/
 
 
 ## log ###
-/logs/*.log
+logs/*.log
